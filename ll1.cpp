@@ -17,7 +17,15 @@ class linkedlist
     linkedlist();
     void insertnode(int n);
     void insertatbeg(int n);
-    void insertafter(int v, int n);
+    void insertafter(int v, int new_data);
+    void insertatmid(int val);
+    void delfirst();
+    void delend();
+    void delkey(int val);
+    void reverse(node * temp);
+    void printreverse();
+    void revelink();
+    void search(int key);
     void print();
 };
 node::node()
@@ -56,30 +64,41 @@ void linkedlist::insertatbeg(int n)
     newnode->next=head;
     head=newnode;
 }
-void linkedlist::insertafter(int v, int p){
-	node *temp = new node(v);
-    temp->data=v;
-
-	//temp->data = v;
-	if (p == 0){
-		// if p==0 then insert temp at beginning
-		temp->next = head;
-		head = temp;
-	}
-	else{
-		node *ptr = head;
-		// the loop sets ptr to (p-1)th node
-		while(p>1) {
-			ptr = ptr->next;
-			--p;
-		}
-		// ptr now points to (p-1)th node
-		// insert temp between (p-1)th and pth node
-		temp->next = ptr->next;
-		ptr->next = temp;
-	}
+void linkedlist::insertafter(int v, int new_data)  
+{
+    node* temp=head;
+    node* new_node = new node(new_data);
+    new_node->data = new_data; 
+    while(temp!=NULL)
+    {
+        if(temp->data==v)
+        {
+            new_node->next=temp->next;
+            temp->next=new_node;
+        }
+        temp=temp->next;
+    }
+} 
+void linkedlist::insertatmid(int val)
+{
+    int count=0;
+    node* temp=head;
+    node*new_node=new node(val);
+    new_node->data=val;
+    while(temp!=NULL)
+    {
+        count++;
+        temp=temp->next;
+    }
+    int i=((count%2==0)?(count/2):(count+1)/2);
+    temp=head;
+    while(i-- >1)
+    {
+        temp=temp->next;
+    }
+    new_node->next=temp->next;
+    temp->next=new_node;
 }
-
 void linkedlist::print()
 {
     node*temp=head;
@@ -89,6 +108,100 @@ void linkedlist::print()
         temp=temp->next;
     }
     cout<<"NULL";
+    cout<<endl;
+}
+void linkedlist::delfirst()
+{
+    if (head == NULL)
+        return;
+    node* temp = head;
+    head = head->next;
+    delete temp;
+}
+void linkedlist::delend()
+{
+    if(head==NULL)
+    {
+        return;
+    }
+    node* temp=head;
+    if(temp->next==NULL)
+    {
+        delete temp;
+    }
+    node* second_last = head;
+    while (second_last->next->next != NULL)
+        second_last = second_last->next;
+    delete (second_last->next);
+    second_last->next = NULL;
+}
+void linkedlist::delkey(int val)
+{
+    node* temp=head;
+    node* prev=NULL;
+    if(temp!=NULL && temp->data==val)
+    {
+        head=temp->next;
+        delete temp;
+    }
+    else
+    {
+        while (temp != NULL && temp->data != val)
+        {
+            prev = temp;
+            temp = temp->next;
+        }
+        if (temp == NULL)
+            return;
+        prev->next = temp->next;
+        delete temp;
+    }
+}
+void linkedlist::reverse(node* temp)
+{
+    if(temp==NULL)
+    {
+        return;
+    }
+    reverse(temp->next);
+    cout<<temp->data<<" "<<"->";
+}
+void linkedlist::printreverse()
+{
+    reverse(head);
+    cout<<"NULL"<<endl;
+}
+void linkedlist::revelink()
+{
+    node*prev=NULL;
+    node*cur=head;
+    node*temp=NULL;
+    while(cur!=NULL)
+    {
+        temp=cur->next;
+        cur->next=prev;
+        prev=cur;
+        cur=temp;
+    }
+    head=prev;
+}
+void linkedlist::search(int key)
+{
+    node*temp=head;
+    int flag=0;
+    while(temp!=NULL)
+    {
+        if(temp->data==key)
+        {
+            flag=1;
+            cout<<"yes element is there"<<endl;
+        }
+        temp=temp->next;
+    }
+    if(flag==0)
+    {
+        cout<<"Element not found"<<endl;
+    }
 }
 int main()
 {
@@ -96,7 +209,24 @@ int main()
     l.insertnode(50);
     l.insertnode(45);
     l.insertnode(21);
+    l.print();
     l.insertatbeg(32);
+    l.print();
     l.insertafter(45,78);
     l.print();
+    l.insertatmid(33);
+    l.print();
+    l.insertatmid(37);
+    l.print();
+    l.delfirst();
+    l.print();
+    l.delend();
+    l.print();
+    l.delkey(37);
+    l.print();
+    l.printreverse();
+    l.revelink();
+    l.print();
+    l.search(45);
+    l.search(12);
 }
